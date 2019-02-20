@@ -1,29 +1,23 @@
-
-//private
+//PRIVATE
 import Pokemon from "../models/pokemon.js";
+import SelectedPokemon from "../models/selectedPokemon.js";
 
-//provide controlls to GET/POST/PUT/DELETE
+// @ts-ignore
 let _pokemonAPI = axios.create({
   baseURL: 'https://pokeapi.co/api/v2/pokemon'
 })
 
-let _sandbox = axios.create({
-  baseURL: 'https://bcw-sandbox.herokuapp.com/api/Caleb/Pokemon'
-})
-
-//variable controlls for Pokemon
-// let _characters = 'pokemon'
-// let _offset = 200
-// let _apiKey = '53496df3cd682930aa9108759e347171'
 
 
 let _state = {
   apiPokemons: [],
+  selectedPokemon: {},
   myTeam: []
 }
 
 let _subscribers = {
   apiPokemons: [],
+  selectedPokemon: [],
   myTeam: []
 }
 
@@ -32,7 +26,7 @@ function setState(prop, data) {
   _subscribers[prop].forEach(fn => fn())
 }
 
-//public
+//PUBLIC
 export default class PokemonService {
 
   addSubscriber(prop, fn) {
@@ -40,52 +34,20 @@ export default class PokemonService {
   }
 
   get ApiPokemons() {
-    return _state.apiPokemons.map(h => new Pokemon(h))
+    return _state.apiPokemons
   }
 
-  get MyTeam() {
-    return _state.myTeam.map(h => new Pokemon(h))
+  get SelectedApiPokemon() {
+    return _state.selectedPokemon
   }
 
 
-  //POST DATA
-  addToTeam(id) {
-    //find pokemon
-    let pokemon = _state.apiPokemons.find(pokemon => pokemon.id == id)
-    //find if pokemon is already in list
-    let myPokemon = _state.myTeam.find(h => h.name == pokemon.name)
-    //prevent adding duplicates
-    if (myPokemon) {
-      alert('DUPLICATE POKEMON')
-      return
-    }
-    ///SEND DATA TO SERVER
-    //first parameter is appended on baseURL, second parameter is data to send
-    _sandbox.post('', pokemon)
-      .then(res => {
-        this.getMyTeamData()
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  //GET DATA
-  getMyTeamData() {
-    _sandbox.get()
-      .then(res => {
-        let data = res.data.data.map(d => new Pokemon(d))
-        setState('myTeam', data)
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }
   //GET DATA
   getPokemonData() {
     _pokemonAPI.get()
       .then(res => {
-        let data = res.data.data.results.map(d => new Pokemon(d))
+        console.log(res)
+        let data = res.data.results.map(d => new Pokemon(d))
         setState('apiPokemons', data)
       })
       .catch(err => {
@@ -93,23 +55,128 @@ export default class PokemonService {
       })
   }
 
-  //DELETE DATA
-  removeFromTeam(id) {
-    _sandbox.delete(id)
+
+
+  //PROBLEMS WITH THIS AS WELL????
+  getSelectedPokemonData(name) {
+    _pokemonAPI.get(name)
       .then(res => {
-        console.log(res.data)
-        this.getMyTeamData()
+        console.log(res)
+        let data = res.data
+        new SelectedPokemon(res.data)
+        setState('selectedPokemon', data)
       })
       .catch(err => {
         console.error(err)
       })
   }
-
-
-  editPokemon(newData) {
-    _sandbox.put(newData.id, newData)
-      .then(res => {
-        this.getMyTeamData()
-      })
-  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // let _sandbox = axios.create({
+  //   baseURL: 'https://bcw-sandbox.herokuapp.com/api/Sherfick/Pokemon'
+  // })
+
+  //variable controlls for Pokemon
+  // let _characters = 'pokemon'
+  // let _offset = 200
+  // let _apiKey = '53496df3cd682930aa9108759e347171'
+
+  //   //DELETE DATA
+  //   removeFromTeam(id) {
+  //     _sandbox.delete(id)
+  //       .then(res => {
+  //         console.log(res.data)
+  //         this.getMyTeamData()
+  //       })
+  //       .catch(err => {
+  //         console.error(err)
+  //       })
+  //   }
+
+
+  //   editPokemon(newData) {
+  //     _sandbox.put(newData.id, newData)
+  //       .then(res => {
+  //         this.getMyTeamData()
+  //       })
+  //   }
+
+
+  // get MyTeam() {
+    //   return _state.myTeam.map(h => new Pokemon(h))
+      // }
+
+
+      // //POST DATA
+      // addToTeam(id) {
+        //   //find pokemon
+      //   let pokemon = _state.apiPokemons.find(pokemon => pokemon.id == id)
+      //   //find if pokemon is already in list
+      //   let myPokemon = _state.myTeam.find(h => h.name == pokemon.name)
+      //   //prevent adding duplicates
+      //   if (myPokemon) {
+        //     alert('DUPLICATE POKEMON')
+        //     return
+        //   }
+        //   ///SEND DATA TO SERVER
+        //   //first parameter is appended on baseURL, second parameter is data to send
+        //   _sandbox.post('', pokemon)
+        //     .then(res => {
+          //       this.getMyTeamData()
+          //     })
+      //     .catch(err => {
+        //       console.log(err)
+        //     })
+        // }
+
+
+
+      // //GET DATA
+      // getMyTeamData() {
+      //   _sandbox.get()
+      //     .then(res => {
+      //       let data = res.data.data.map(d => new Pokemon(d))
+      //       setState('myTeam', data)
+      //     })
+      //     .catch(err => {
+      //       console.error(err)
+      //     })
+      // }
