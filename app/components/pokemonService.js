@@ -57,13 +57,11 @@ export default class PokemonService {
 
 
 
-  //PROBLEMS WITH THIS AS WELL????
   getSelectedPokemonData(name) {
     _pokemonAPI.get(name)
       .then(res => {
         console.log(res)
-        let data = res.data
-        new SelectedPokemon(res.data)
+        let data = new SelectedPokemon(res.data)
         setState('selectedPokemon', data)
       })
       .catch(err => {

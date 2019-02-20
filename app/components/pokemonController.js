@@ -13,7 +13,6 @@ function drawApiPokemons() {
 }
 
 
-//HOW TO WRITE THIS FUNCTION???
 function drawSelectedPokemon() {
   let template = ''
   let selPokemon = _pokemonService.SelectedApiPokemon
