@@ -10,6 +10,21 @@ function drawApiPokemons() {
     template += p.getBtn()
   })
   document.querySelector('.pokemon-characters').innerHTML = template
+
+  document.getElementById('buttons').innerHTML = `
+    <button ${_pokemonService.Previous ? '' : 'disabled'} onclick="app.controllers.pokemonController.getPokemon('${_pokemonService.Previous}')">Previous</button>
+    <button ${_pokemonService.Next ? '' : 'disabled'} onclick="app.controllers.pokemonController.getPokemon('${_pokemonService.Next}')">Next</button>
+    `
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -34,6 +49,16 @@ export default class PokemonController {
     _pokemonService.getSelectedPokemonData(name)
   }
 
+  getPokemon(url) {
+    _pokemonService.getPokemonData(url)
+  }
+
+  // getNextPokemon() {
+  //   _pokemonService.getNextPokemon()
+  // }
+
+
+
 }
 
 
@@ -74,37 +99,28 @@ export default class PokemonController {
 
 
 
-  // _pokemonService.addSubscriber('myTeam', drawMyTeam)
-  // _pokemonService.getMyTeamData()
+// _pokemonService.addSubscriber('myTeam', drawMyTeam)
+// _pokemonService.getMyTeamData()
 
-  // function drawMyTeam() {
-  //   let template = ''
-  //   let pokemons = _pokemonService.MyTeam
-  //   pokemons.forEach(p => {
-  //     let button = `<button class="btn btn-danger" onclick="app.controllers.pokemonController.removeFromTeam('${p.id}')">Remove From Team</button>
-  //         <i onclick="app.controllers.pokemonController.showEditForm('${p.id}')" class="fas fa-pencil-alt"></i>
-  //         `
-  //     template += p.getCard(button)
-  //   })
-  //   document.querySelector('.myteam').innerHTML = template
-  // }
-  // addToTeam(id) {
-  //   _pokemonService.addToTeam(id)
-  // }
-  // removeFromTeam(id) {
-  //   _pokemonService.removeFromTeam(id)
-  // }
-  // showEditForm(id) {
-  //   document.getElementById(id).hidden = false;
-  // }
+// function drawMyTeam() {
+//   let template = ''
+//   let pokemons = _pokemonService.MyTeam
+//   pokemons.forEach(p => {
+//     let button = `<button class="btn btn-danger" onclick="app.controllers.pokemonController.removeFromTeam('${p.id}')">Remove From Team</button>
+//         
+//         `
+//     template += p.getCard(button)
+//   })
+//   document.querySelector('.myteam').innerHTML = template
+// }
+// addToTeam(id) {
+//   _pokemonService.addToTeam(id)
+// }
+// removeFromTeam(id) {
+//   _pokemonService.removeFromTeam(id)
+// }
 
-  // editPokemon(event) {
-  //   event.preventDefault();
-  //   let data = {
-  //     id: event.target.id,
-  //     description: event.target.description.value
-  //   }
-  //   _pokemonService.editPokemon(data)
+
 
 
   // }

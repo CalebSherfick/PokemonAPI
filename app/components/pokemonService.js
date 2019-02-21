@@ -12,12 +12,17 @@ let _pokemonAPI = axios.create({
 let _state = {
   apiPokemons: [],
   selectedPokemon: {},
+  nextPrevPokemon: {
+    nextUrl: '',
+    previousUrl: ''
+  },
   myTeam: []
 }
 
 let _subscribers = {
   apiPokemons: [],
   selectedPokemon: [],
+  nextPrevPokemon: [],
   myTeam: []
 }
 
@@ -37,25 +42,36 @@ export default class PokemonService {
     return _state.apiPokemons
   }
 
+  get Next() {
+    return _state.nextPrevPokemon.nextUrl
+  }
+
+  get Previous() {
+    return _state.nextPrevPokemon.previousUrl
+  }
+
   get SelectedApiPokemon() {
     return _state.selectedPokemon
   }
 
 
   //GET DATA
-  getPokemonData() {
-    _pokemonAPI.get()
+  getPokemonData(url = '') {
+    _pokemonAPI.get(url)
       .then(res => {
         console.log(res)
         let data = res.data.results.map(d => new Pokemon(d))
+        let urlData = {
+          nextUrl: res.data.next,
+          previousUrl: res.data.previous
+        }
+        setState('nextPrevPokemon', urlData)
         setState('apiPokemons', data)
       })
       .catch(err => {
         console.error(err)
       })
   }
-
-
 
   getSelectedPokemonData(name) {
     _pokemonAPI.get(name)
@@ -68,6 +84,25 @@ export default class PokemonService {
         console.error(err)
       })
   }
+
+
+
+
+
+
+
+  // getNextPokemon() {
+  //   _pokemonAPI.get('?offset=20')
+  //     .then(res => {
+  //       console.log(res)
+  //       let data = res.data.next
+  //       setState('apiPokemons', data)
+  //     })
+  //     .catch(err => {
+  //       console.error(err)
+  //     })
+  // }
+
 }
 
 
