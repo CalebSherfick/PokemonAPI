@@ -7,120 +7,75 @@ function drawApiPokemons() {
   let template = ''
   let pokemons = _pokemonService.ApiPokemons
   pokemons.forEach(p => {
-    template += p.getBtn()
+    template += `
+      <li class="col-xs-12 col-sm-4 col-md-3 col-lg-1 card d-flex justify-content-center">
+            <img class="card-img-top" src="${p.img}">
+          <div class="">
+            <p class="text-center">
+              #${p.id}
+            </p>
+            <h6 class="text-center">${p.name.toString().toUpperCase()}</h6>
+            <div class="card-footer bg-transparent">
+            <button class="btn btn-info" onclick="app.controllers.pokemonController.addPokemon()">Add to PC</button>
+          </div>
+          </div>
+          </li>
+`
   })
   document.querySelector('.pokemon-characters').innerHTML = template
 
-  document.getElementById('buttons').innerHTML = `
-    <button ${_pokemonService.Previous ? '' : 'disabled'} onclick="app.controllers.pokemonController.getPokemon('${_pokemonService.Previous}')">Previous</button>
-    <button ${_pokemonService.Next ? '' : 'disabled'} onclick="app.controllers.pokemonController.getPokemon('${_pokemonService.Next}')">Next</button>
-    `
-
-
-
-
-
-
-
-
-
-
+  // document.getElementById('buttons').innerHTML = `
+  //   <button ${_pokemonService.Previous ? '' : 'disabled'} onclick="app.controllers.pokemonController.getPokemon('${_pokemonService.Previous}')">Previous</button>
+  //   <button ${_pokemonService.Next ? '' : 'disabled'} onclick="app.controllers.pokemonController.getPokemon('${_pokemonService.Next}')">Next</button>
+  //   `
 }
 
+// function drawActivePokemon() {
+//   document.querySelector('.active-pokemon').innerHTML = _pokemonService.ActiveApiPokemon.getSelBtn()
+// }
 
-function drawSelectedPokemon() {
+function drawActiveMyPokemon() {
+  document.querySelector('.active-pokemon').innerHTML = _pokemonService.ActiveMyPokemon.getRemoveBtn()
+}
+
+function drawMyPokemon() {
   let template = ''
-  let selPokemon = _pokemonService.SelectedApiPokemon
-
-  template = selPokemon.getSelBtn() //make a new model 
-  document.querySelector('.selected-pokemon').innerHTML = template
+  _pokemonService.MyPokemon.forEach(p => {
+    template += `
+    <button onclick="app.controllers.pokemonController.showDetails('${p.id}')">${p.name}</button>
+    `
+  })
+  document.querySelector('.my-pokemon').innerHTML = template
 }
 
 //PUBLIC
 export default class PokemonController {
   constructor() {
     _pokemonService.addSubscriber('apiPokemons', drawApiPokemons)
-    _pokemonService.addSubscriber('selectedPokemon', drawSelectedPokemon)
+    // _pokemonService.addSubscriber('activePokemon', drawActivePokemon)
+    _pokemonService.addSubscriber('activeMyPokemon', drawActiveMyPokemon)
+    _pokemonService.addSubscriber('myPokemon', drawMyPokemon)
 
     _pokemonService.getPokemonData()
   }
 
-  getSelectedPokemonData(name) {
-    _pokemonService.getSelectedPokemonData(name)
-  }
-
-  getPokemon(url) {
-    _pokemonService.getPokemonData(url)
-  }
-
-  // getNextPokemon() {
-  //   _pokemonService.getNextPokemon()
+  // getActivePokemonData(url) {
+  //   _pokemonService.getActivePokemonData(url)
   // }
 
+  // showDetails(id) {
+  //   _pokemonService.showDetails(id)
+  // }
 
+  getPokemon() {
+    _pokemonService.getPokemonData()
+  }
 
+  addPokemon() {
+    _pokemonService.addPokemon()
+  }
+
+  releasePokemon() {
+    _pokemonService.releasePokemon()
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// _pokemonService.addSubscriber('myTeam', drawMyTeam)
-// _pokemonService.getMyTeamData()
-
-// function drawMyTeam() {
-//   let template = ''
-//   let pokemons = _pokemonService.MyTeam
-//   pokemons.forEach(p => {
-//     let button = `<button class="btn btn-danger" onclick="app.controllers.pokemonController.removeFromTeam('${p.id}')">Remove From Team</button>
-//         
-//         `
-//     template += p.getCard(button)
-//   })
-//   document.querySelector('.myteam').innerHTML = template
-// }
-// addToTeam(id) {
-//   _pokemonService.addToTeam(id)
-// }
-// removeFromTeam(id) {
-//   _pokemonService.removeFromTeam(id)
-// }
-
-
-
-
-  // }
