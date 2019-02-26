@@ -16,7 +16,7 @@ function drawApiPokemons() {
             </p>
             <h6 class="text-center">${p.name.toString().toUpperCase()}</h6>
             <div class="card-footer bg-transparent">
-            <button class="btn btn-info" onclick="app.controllers.pokemonController.addPokemon()">Add to PC</button>
+            <button class="btn btn-info" onclick="app.controllers.pokemonController.addPokemon('${p.name}')">Add to PC</button>
           </div>
           </div>
           </li>
@@ -52,7 +52,7 @@ function drawMyPokemon() {
 export default class PokemonController {
   constructor() {
     _pokemonService.addSubscriber('apiPokemons', drawApiPokemons)
-    // _pokemonService.addSubscriber('activePokemon', drawActivePokemon)
+    // // _pokemonService.addSubscriber('activePokemon', drawActivePokemon)
     _pokemonService.addSubscriber('activeMyPokemon', drawActiveMyPokemon)
     _pokemonService.addSubscriber('myPokemon', drawMyPokemon)
 
@@ -63,16 +63,17 @@ export default class PokemonController {
   //   _pokemonService.getActivePokemonData(url)
   // }
 
-  // showDetails(id) {
-  //   _pokemonService.showDetails(id)
-  // }
+  showDetails(id) {
+    _pokemonService.showDetails(id)
+  }
 
   getPokemon() {
     _pokemonService.getPokemonData()
   }
 
-  addPokemon() {
-    _pokemonService.addPokemon()
+  addPokemon(p) {
+    console.log(p)
+    _pokemonService.addPokemon(p)
   }
 
   releasePokemon() {

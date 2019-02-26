@@ -61,7 +61,7 @@ export default class PokemonService {
 
   getPokemonData() {
     let endpoints = []
-    for (let i = 1; i <= 151; i++) {
+    for (let i = 1; i <= 10; i++) {
       endpoints.push("" + i)
     }
     let promises = endpoints.map(endPoint => {
@@ -79,6 +79,11 @@ export default class PokemonService {
       })
   }
 
+  showDetails(id) {
+    let pokemon = _state.myPokemon.find(p => p.id == id)
+    setState('activeMyPokemon', pokemon)
+  }
+
   // getActivePokemonData(url) {
   //   _pokemonAPI.get(url) 
   //     .then(res => {
@@ -90,19 +95,17 @@ export default class PokemonService {
   //     })
   // }
 
-  // showDetails(id) {
-  //   let pokemon = _state.myPokemon.find(p => p.id == id)
-  //   setState('activeMyPokemon', pokemon)
-  // }
 
-  addPokemon() {
-    let pokemon = _state.myPokemon.find(p => p.name == _state.activePokemon.name)
-    if (!pokemon) {
-      _state.myPokemon.push(_state.activePokemon)
+  addPokemon(name) {
+    let pokemon = _state.apiPokemons.find(p => p.name == name)
+    let myPoke = _state.myPokemon.find(p => p.name == name)
+    if (!myPoke) {
+      _state.myPokemon.push(pokemon)
       _subscribers.myPokemon.forEach(fn => fn())
     } else {
       window.alert("You have already logged this pokemon")
     }
+    console.log(_state.myPokemon)
   }
 
   releasePokemon() {
