@@ -6,6 +6,11 @@ let _pokemonAPI = axios.create({
   baseURL: 'https://pokeapi.co/api/v2/pokemon'
 })
 
+// @ts-ignore
+let _myApi = axios.create({
+  baseURL: 'https://bcw-sandbox.herokuapp.com/api/caleb/pokemon'
+})
+
 let _state = {
   apiPokemons: [],
   activeMyPokemon: {},
@@ -39,17 +44,6 @@ export default class PokemonService {
     return _state.apiPokemons
   }
 
-  // get Next() {
-  //   return _state.nextPrevPokemon.nextUrl
-  // }
-
-  // get Previous() {
-  //   return _state.nextPrevPokemon.previousUrl
-  // }
-
-  // get ActiveApiPokemon() {
-  //   return _state.activePokemon
-  // }
   get ActiveMyPokemon() {
     return _state.activeMyPokemon
   }
@@ -57,7 +51,6 @@ export default class PokemonService {
   get MyPokemon() {
     return _state.myPokemon.map(p => new Pokemon(p))
   }
-
 
   getPokemonData() {
     let endpoints = []
@@ -79,41 +72,60 @@ export default class PokemonService {
       })
   }
 
-  showDetails(id) {
-    let pokemon = _state.myPokemon.find(p => p.id == id)
-    setState('activeMyPokemon', pokemon)
+  getMyPokemon() {
+    console.log("Getting My Pokemon List")
+    _myApi.get()
+      .then(res => {
+        console.log(res)
+        let data = res.data.data.map(d => new Pokemon(d))
+        setState('myPokemon', data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
-  // getActivePokemonData(url) {
-  //   _pokemonAPI.get(url) 
-  //     .then(res => {
-  //       let data = new Pokemon(res.data)
-  //       setState('activePokemon', data)
-  //     })
-  //     .catch(err => {
-  //       console.error(err)
-  //     })
+  addMyPokemon(id) {
+    let newPokemon = new Pokemon(id)
+    _myApi.post('', newPokemon)
+      .then(res => {
+        this.getMyPokemon()
+      })
+  }
+
+  deletePokemon(id) {
+    _myApi.delete(id)
+      .then(res => {
+        this.getMyPokemon()
+      })
+  }
+
+
+
+
+  // showDetails(id) {
+  //   let pokemon = _state.myPokemon.find(p => p.id == id)
+  //   setState('activeMyPokemon', pokemon)
   // }
 
+  // addPokemon(name) {
+  //   let pokemon = _state.apiPokemons.find(p => p.name == name)
+  //   let myPoke = _state.myPokemon.find(p => p.name == name)
+  //   if (!myPoke) {
+  //     _state.myPokemon.push(pokemon)
+  //     _subscribers.myPokemon.forEach(fn => fn())
+  //   } else {
+  //     window.alert("You have already logged this pokemon")
+  //   }
+  //   console.log(_state.myPokemon)
+  // }
 
-  addPokemon(name) {
-    let pokemon = _state.apiPokemons.find(p => p.name == name)
-    let myPoke = _state.myPokemon.find(p => p.name == name)
-    if (!myPoke) {
-      _state.myPokemon.push(pokemon)
-      _subscribers.myPokemon.forEach(fn => fn())
-    } else {
-      window.alert("You have already logged this pokemon")
-    }
-    console.log(_state.myPokemon)
-  }
-
-  releasePokemon() {
-    let index = _state.myPokemon.findIndex(p => p.name == _state.activeMyPokemon.name)
-    if (index != -1) {
-      _state.myPokemon.splice(index, 1)
-      _subscribers.myPokemon.forEach(fn => fn())
-    }
-  }
+  // releasePokemon() {
+  //   let index = _state.myPokemon.findIndex(p => p.name == _state.activeMyPokemon.name)
+  //   if (index != -1) {
+  //     _state.myPokemon.splice(index, 1)
+  //     _subscribers.myPokemon.forEach(fn => fn())
+  //   }
+  // }
 
 }
